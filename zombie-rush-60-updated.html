@@ -1,118 +1,707 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="tr">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>ZOMBIE RUSH — 60 Dalga</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>ZOMBIE RUSH</title>
+
 <style>
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070b0d;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
-body{user-select:none}
-#game{position:fixed;inset:0;background:
-radial-gradient(circle at 50% 42%,rgba(70,82,77,.13),transparent 38%),
-linear-gradient(#080c0e,#050708)}
-canvas{position:absolute;inset:0;width:100%;height:100%}
-#hud{position:absolute;top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;z-index:5}
-.stat{background:rgba(12,18,21,.88);border:1px solid #344149;border-radius:15px;padding:9px 7px;text-align:center;box-shadow:0 4px 18px #0008}
-.stat b{display:block;font-size:17px}.stat span{font-size:12px;color:#9ba7ac}
-#bossbar{position:absolute;top:72px;left:15%;right:15%;height:9px;border-radius:9px;background:#251116;border:1px solid #71313b;z-index:5;display:none}
-#bossfill{height:100%;width:100%;background:#d33b45;border-radius:9px}
-#controls{position:absolute;inset:0;z-index:4}
-#stick{position:absolute;left:28px;bottom:42px;width:132px;height:132px;border:1px solid #647077;background:#ffffff12;border-radius:50%}
-#knob{position:absolute;left:37px;top:37px;width:58px;height:58px;border-radius:50%;background:#d9dfe2aa;border:2px solid #fff5}
-.btn{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:.5px;border:1px solid #ffffff55;box-shadow:inset 0 0 20px #fff1,0 8px 25px #0009}
-#fire{right:30px;bottom:36px;width:145px;height:145px;background:#a72b31;font-size:23px}
-#dash{right:74px;bottom:218px;width:88px;height:88px;background:#263036;font-size:17px}
-#reload{right:185px;bottom:215px;width:75px;height:75px;background:#273238;font-size:12px;display:none}
-#message{position:absolute;top:23%;left:50%;transform:translateX(-50%);font-weight:900;font-size:28px;text-shadow:0 3px 15px #000;opacity:0;z-index:6;white-space:nowrap}
-#start{position:absolute;inset:0;z-index:20;background:rgba(2,5,6,.93);display:flex;align-items:center;justify-content:center;padding:28px}
-.panel{max-width:700px;width:100%;background:#0c1215;border:1px solid #435159;border-radius:26px;padding:28px;box-shadow:0 20px 80px #000}
-h1{margin:0 0 8px;font-size:clamp(42px,10vw,74px);letter-spacing:2px}h1 i{color:#ef4c52;font-style:normal}
-.panel p{color:#b8c1c5;font-size:17px;line-height:1.45}.panel li{margin:10px 0;color:#d8dfe2}
-#startBtn{width:100%;border:0;border-radius:16px;background:#d7353b;color:#fff;padding:18px;font-size:21px;font-weight:900;margin-top:14px}
-#toast{position:absolute;left:50%;bottom:20%;transform:translateX(-50%);background:#0b1114dd;border:1px solid #54636a;border-radius:14px;padding:10px 16px;z-index:10;opacity:0}
+
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070a0b;font-family:Arial,sans-serif;color:white}
+
+canvas{position:fixed;inset:0;width:100%;height:100%}
+
+#hud{position:fixed;top:max(8px,env(safe-area-inset-top));left:8px;right:8px;display:flex;gap:7px;z-index:5}
+
+.stat{background:rgba(10,15,17,.88);border:1px solid #344047;border-radius:14px;padding:10px 12px;font-weight:bold;font-size:14px;flex:1;text-align:center}
+
+#controls{position:fixed;inset:0;z-index:6;pointer-events:none}
+
+.btn{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;user-select:none;pointer-events:auto}
+
+#fire{right:24px;bottom:38px;width:140px;height:140px;background:#a52b2b;border:2px solid #d75b5b;font-size:20px}
+
+#dash{right:76px;bottom:205px;width:82px;height:82px;background:#273136;border:2px solid #536067}
+
+#reload{right:185px;bottom:210px;width:78px;height:78px;background:#263035;border:2px solid #536067;font-size:12px}
+
+#stick{left:28px;bottom:40px;width:145px;height:145px;border-radius:50%;background:rgba(100,110,115,.14);border:2px solid rgba(180,190,195,.25);pointer-events:auto}
+
+#knob{position:absolute;left:37px;top:37px;width:70px;height:70px;border-radius:50%;background:rgba(220,225,228,.4)}
+
+#message{position:fixed;top:23%;left:50%;transform:translateX(-50%);z-index:10;text-align:center;font-size:28px;font-weight:900;text-shadow:0 3px 10px #000;pointer-events:none}
+
+#start{position:fixed;inset:0;z-index:20;background:rgba(2,5,6,.93);display:flex;align-items:center;justify-content:center;padding:30px}
+
+.panel{width:min(680px,100%);background:#0c1113;border:1px solid #3d4a50;border-radius:25px;padding:28px}
+
+h1{margin:0 0 8px;font-size:clamp(38px,10vw,72px)}
+
+.red{color:#f04b4b}
+
+.panel p{color:#b8c1c5;font-size:17px;line-height:1.5}
+
+#startBtn{width:100%;padding:20px;border:0;border-radius:16px;background:#d63333;color:white;font-size:20px;font-weight:900}
+
+#upgrade{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:20px}
+
+.upbox{background:#101619;border:1px solid #526067;border-radius:22px;padding:22px;width:min(500px,100%);text-align:center}
+
+.up{width:100%;padding:15px;margin:7px 0;border:1px solid #4c5a60;background:#1b2428;color:white;border-radius:12px;font-weight:bold}
+
 </style>
+
 </head>
+
 <body>
-<div id="game">
-<canvas id="c"></canvas>
+
+<canvas id="game"></canvas>
+
 <div id="hud">
- <div class="stat">❤️ <b id="hp">100</b><span>CAN</span></div>
- <div class="stat">⚡ <b id="wave">1</b><span>DALGA</span></div>
- <div class="stat">🪙 <b id="coins">0</b><span>PARA</span></div>
- <div class="stat">🔫 <b id="ammo">12 / 72</b><span>GLOCK</span></div>
+
+ <div class="stat">❤️ <span id="hp">100</span></div>
+
+ <div class="stat">⚡ Seviye <span id="level">1</span></div>
+
+ <div class="stat">🪙 <span id="money">0</span></div>
+
+ <div class="stat">🔫 <span id="ammo">12</span></div>
+
 </div>
-<div id="bossbar"><div id="bossfill"></div></div>
+
 <div id="message"></div>
-<div id="toast"></div>
+
 <div id="controls">
+
  <div id="stick"><div id="knob"></div></div>
- <div class="btn" id="dash">DASH</div>
- <div class="btn" id="reload">↻</div>
- <div class="btn" id="fire">ATEŞ</div>
+
+ <div id="reload" class="btn">YENİLE</div>
+
+ <div id="dash" class="btn">DASH</div>
+
+ <div id="fire" class="btn">ATEŞ</div>
+
 </div>
+
 <div id="start">
+
  <div class="panel">
-  <h1><i>ZOMBIE</i> RUSH</h1>
-  <p>60 dalgalık karanlık hayatta kalma prototipi. Bu sürümde animasyon, parçacık, geri tepme, yeniden doldurma, dalga ve geliştirme altyapısı hazır.</p>
-  <ul><li>🎮 Sol joystick ile hareket</li><li>🎯 En yakın zombiye otomatik hedef</li><li>🩸 İsabet parçacıkları ve vuruş efektleri</li><li>🔫 Şarjör / yeniden doldurma sistemi</li><li>🌊 Dalga ilerledikçe zombiler güçlenir</li></ul>
+
+  <h1><span class="red">ZOMBIE</span> RUSH</h1>
+
+  <p>60 DALGA • KARANLIK HAYATTA KALMA</p>
+
+  <p>🎯 Otomatik hedefleme<br>
+
+  🔫 Geliştirilebilir silahlar<br>
+
+  🧟 Hareketli zombiler<br>
+
+  💥 Mermi ve kan parçacıkları<br>
+
+  ⚡ Seviye ve para sistemi</p>
+
   <button id="startBtn">OYUNA BAŞLA</button>
+
  </div>
+
 </div>
+
+<div id="upgrade">
+
+ <div class="upbox">
+
+  <h2>⚡ SEVİYE ATLADIN</h2>
+
+  <p>Bir geliştirme seç</p>
+
+  <button class="up" id="upDamage">🔫 HASAR +25%</button>
+
+  <button class="up" id="upFire">⚡ ATEŞ HIZI +20%</button>
+
+  <button class="up" id="upHealth">❤️ CAN +30</button>
+
+ </div>
+
 </div>
+
 <script>
-const c=document.getElementById('c'),x=c.getContext('2d');
-let W,H,dpr,run=false,last=0,hp=100,wave=1,coins=0,ammo=12,reserve=72,kills=0;
-let px,py,aim=0,shooting=false,reloading=false,dash=0,spawn=0,waveKills=0;
-let zombies=[],bullets=[],particles=[],texts=[];
-const joy={x:0,y:0,active:false,id:null};
-function resize(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0); if(px==null){px=W/2;py=H*.55}}
-addEventListener('resize',resize);resize();
-const $=id=>document.getElementById(id);
-function ui(){$('hp').textContent=Math.max(0,Math.ceil(hp));$('wave').textContent=wave;$('coins').textContent=coins;$('ammo').textContent=ammo+' / '+reserve}
-function msg(t){$('message').textContent=t;$('message').style.opacity=1;clearTimeout(msg.t);msg.t=setTimeout(()=>$('message').style.opacity=0,700)}
-function toast(t){$('toast').textContent=t;$('toast').style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').style.opacity=0,900)}
-function spawnZombie(){let side=Math.floor(Math.random()*4),zx,zy;if(side===0){zx=Math.random()*W;zy=-35}else if(side===1){zx=W+35;zy=Math.random()*H}else if(side===2){zx=Math.random()*W;zy=H+35}else{zx=-35;zy=Math.random()*H}
-let elite=Math.random()<Math.min(.04+wave*.006,.25);zombies.push({x:zx,y:zy,r:elite?28:21,hp:elite?90+wave*8:35+wave*4,max:elite?90+wave*8:35+wave*4,s:elite?32+wave*.7:39+wave*.8,elite,hit:0,walk:Math.random()*6.28})}
-function nearest(){let best=null,bd=1e9;for(const z of zombies){let d=(z.x-px)**2+(z.y-py)**2;if(d<bd){bd=d;best=z}}return best}
-function shoot(){if(!run||reloading||ammo<=0)return;let z=nearest();if(!z){return}ammo--;ui();let dx=z.x-px,dy=z.y-py, len=Math.hypot(dx,dy)||1;bullets.push({x:px,y:py,tx:z.x,ty:z.y,vx:dx/len*760,vy:dy/len*760,life:0.65});for(let i=0;i<5;i++)particles.push({x:px,y:py,vx:(Math.random()-.5)*120,vy:(Math.random()-.5)*120,life:.16,max:.16,t:'muzzle'});if(ammo===0)toast('ŞARJÖR BOŞ — ↻');
+
+const c=document.getElementById("game"),ctx=c.getContext("2d");
+
+let W,H,DPR;
+
+function resize(){
+
+ DPR=Math.min(devicePixelRatio||1,2); W=innerWidth;H=innerHeight;
+
+ c.width=W*DPR;c.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);
+
 }
-function reload(){if(reloading||ammo===12||reserve<=0)return;reloading=true;toast('Yeniden dolduruluyor…');setTimeout(()=>{let n=Math.min(12-ammo,reserve);ammo+=n;reserve-=n;reloading=false;ui()},850)}
-function damageZombie(z,damage){z.hp-=damage;z.hit=.08;for(let i=0;i<10;i++)particles.push({x:z.x,y:z.y,vx:(Math.random()-.5)*220,vy:(Math.random()-.5)*220,life:.35,max:.35,t:'hit'});if(z.hp<=0){coins+=z.elite?15:3;kills++;waveKills++;for(let i=0;i<18;i++)particles.push({x:z.x,y:z.y,vx:(Math.random()-.5)*300,vy:(Math.random()-.5)*300,life:.55,max:.55,t:'blood'});zombies.splice(zombies.indexOf(z),1);if(waveKills>=Math.min(4+wave*2,25)){wave++;waveKills=0;ammo=12;reserve=Math.min(120,reserve+24);msg('DALGA '+wave);ui()}}}
-function update(dt){if(!run)return;
-let speed=190;if(dash>0) speed=620;
-px=Math.max(20,Math.min(W-20,px+joy.x*speed*dt));py=Math.max(95,Math.min(H-25,py+joy.y*speed*dt));
-if(dash>0)dash-=dt;
-spawn-=dt;if(spawn<=0){let count=1+(wave>8?1:0);for(let i=0;i<count;i++)spawnZombie();spawn=Math.max(.28,1.15-wave*.012)}
-if(shooting){aim-=dt;if(aim<=0){shoot();aim=.16}}
-for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;for(const z of zombies){if(Math.hypot(b.x-z.x,b.y-z.y)<z.r+6){damageZombie(z,28);b.life=0;break}}}
-bullets=bullets.filter(b=>b.life>0&&b.x>-50&&b.x<W+50&&b.y>50&&b.y<H+50);
-for(const z of zombies){let dx=px-z.x,dy=py-z.y,l=Math.hypot(dx,dy)||1;z.x+=dx/l*z.s*dt;z.y+=dy/l*z.s*dt;z.walk+=dt*7;if(l<z.r+17){hp-= (z.elite?15:8)*dt;ui()}}
-for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.94;p.vy*=.94;p.life-=dt}
-particles=particles.filter(p=>p.life>0);
+
+addEventListener("resize",resize);resize();
+
+const state={
+
+ running:false,hp:100,level:1,xp:0,money:0,wave:1,
+
+ ammo:12,maxAmmo:12,damage:28,fireRate:280,lastShot:0,
+
+ reloading:false,player:{x:W/2,y:H*.56},
+
+ kills:0
+
+};
+
+let zombies=[],bullets=[],particles=[],blood=[],keys={},joy={x:0,y:0};
+
+let last=performance.now(),spawnTimer=0,fireHeld=false;
+
+function rand(a,b){return a+Math.random()*(b-a)}
+
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+
+function spawnZombie(){
+
+ const side=Math.floor(Math.random()*4);
+
+ let x,y;
+
+ if(side===0){x=-50;y=rand(80,H)}
+
+ if(side===1){x=W+50;y=rand(80,H)}
+
+ if(side===2){x=rand(0,W);y=-50}
+
+ if(side===3){x=rand(0,W);y=H+50}
+
+ const tough=Math.random()<Math.min(.35,state.wave/100);
+
+ zombies.push({
+
+  x,y,
+
+  r:tough?29:23,
+
+  hp:tough?120+state.wave*4:55+state.wave*2,
+
+  max:tough?120+state.wave*4:55+state.wave*2,
+
+  speed:tough?rand(28,42):rand(42,65)+state.wave*.45,
+
+  hit:0,
+
+  type:tough?"brute":"walker"
+
+ });
+
 }
-function draw(){x.clearRect(0,0,W,H);
-x.strokeStyle='rgba(120,135,140,.10)';x.lineWidth=1;let grid=45;for(let gx=0;gx<W;gx+=grid){x.beginPath();x.moveTo(gx,80);x.lineTo(gx,H);x.stroke()}for(let gy=80;gy<H;gy+=grid){x.beginPath();x.moveTo(0,gy);x.lineTo(W,gy);x.stroke()}
-for(const p of particles){let a=p.life/p.max;x.globalAlpha=a;if(p.t==='blood'||p.t==='hit'){x.fillStyle=p.t==='blood'?'#d52d35':'#ff8b91';x.beginPath();x.arc(p.x,p.y,p.t==='blood'?3:2,0,7);x.fill()}else{x.fillStyle='#ffd66b';x.beginPath();x.arc(p.x,p.y,2,0,7);x.fill()}}x.globalAlpha=1;
-for(const b of bullets){x.strokeStyle='#ffd36b';x.lineWidth=3;x.beginPath();x.moveTo(b.x,b.y);x.lineTo(b.x-b.vx*.018,b.y-b.vy*.018);x.stroke()}
-for(const z of zombies){let bob=Math.sin(z.walk)*2;x.save();x.translate(z.x,z.y+bob);
-x.fillStyle=z.elite?'#253c2b':'#314b32';x.beginPath();x.arc(0,0,z.r,0,7);x.fill();
-x.fillStyle='#172219';x.beginPath();x.arc(-z.r*.35,-z.r*.1,z.r*.18,0,7);x.arc(z.r*.35,-z.r*.1,z.r*.18,0,7);x.fill();
-x.fillStyle='#e6ed76';x.beginPath();x.arc(-z.r*.35,-z.r*.1,z.r*.10,0,7);x.arc(z.r*.35,-z.r*.1,z.r*.10,0,7);x.fill();
-x.fillStyle='#20252a';x.fillRect(-z.r*.45,z.r*.45,z.r*.9,5);x.fillStyle='#d52d35';x.fillRect(-z.r,z.r+8,2*z.r*(z.hp/z.max),4);x.restore()}
-x.save();x.translate(px,py);x.rotate(aim*.0);x.fillStyle='#e6e8e9';x.beginPath();x.arc(0,0,28,0,7);x.fill();x.fillStyle='#202428';x.fillRect(-6,-44,12,28);x.fillStyle='#bfc6ca';x.fillRect(-4,-48,8,7);x.restore();
-if(hp<=0){run=false;toast('OYUN BİTTİ — sayfayı yenileyip tekrar başlayabilirsin.')}
+
+function nearest(){
+
+ let best=null,bd=Infinity;
+
+ for(const z of zombies){
+
+  const d=dist(state.player,z);
+
+  if(d<bd){bd=d;best=z}
+
+ }
+
+ return best;
+
 }
-function loop(t){let dt=Math.min(.035,(t-last)/1000||0);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-function joyStart(e){joy.active=true;joy.id=e.pointerId;joySet(e)}
-function joySet(e){if(!joy.active||e.pointerId!==joy.id)return;let r=$('stick').getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=Math.min(45,Math.hypot(dx,dy)),a=Math.atan2(dy,dx);joy.x=Math.cos(a)*(m/45);joy.y=Math.sin(a)*(m/45);$('knob').style.transform=`translate(${joy.x*37}px,${joy.y*37}px)`}
-function joyEnd(e){if(e.pointerId!==joy.id)return;joy.active=false;joy.x=joy.y=0;$('knob').style.transform='translate(0,0)'}
-$('stick').onpointerdown=joyStart;$('stick').onpointermove=joySet;$('stick').onpointerup=joyEnd;$('stick').onpointercancel=joyEnd;
-$('fire').onpointerdown=e=>{shooting=true;shoot()};$('fire').onpointerup=()=>shooting=false;$('fire').onpointercancel=()=>shooting=false;
-$('reload').onclick=reload;
-$('dash').onclick=()=>{dash=.28;for(let i=0;i<10;i++)particles.push({x:px,y:py,vx:(Math.random()-.5)*150,vy:(Math.random()-.5)*150,life:.3,max:.3,t:'muzzle'})};
-$('startBtn').onclick=()=>{$('start').style.display='none';run=true;toast('DALGA 1 — HAYATTA KAL!')};
-ui();
+
+function shoot(){
+
+ if(!state.running||state.reloading||state.ammo<=0)return;
+
+ const now=performance.now();
+
+ if(now-state.lastShot<state.fireRate)return;
+
+ state.lastShot=now;state.ammo--;
+
+ const z=nearest();
+
+ if(!z)return;
+
+ const ang=Math.atan2(z.y-state.player.y,z.x-state.player.x);
+
+ bullets.push({
+
+  x:state.player.x,y:state.player.y,
+
+  vx:Math.cos(ang)*850,vy:Math.sin(ang)*850,
+
+  life:1,damage:state.damage
+
+ });
+
+ for(let i=0;i<5;i++)particles.push({
+
+  x:state.player.x+Math.cos(ang)*28,
+
+  y:state.player.y+Math.sin(ang)*28,
+
+  vx:Math.cos(ang)*rand(80,180)+rand(-30,30),
+
+  vy:Math.sin(ang)*rand(80,180)+rand(-30,30),
+
+  life:.25,r:rand(2,4),kind:"muzzle"
+
+ });
+
+}
+
+function reload(){
+
+ if(state.reloading||state.ammo===state.maxAmmo)return;
+
+ state.reloading=true;
+
+ setTimeout(()=>{state.ammo=state.maxAmmo;state.reloading=false},900);
+
+}
+
+function addBlood(x,y,n=14){
+
+ for(let i=0;i<n;i++)blood.push({
+
+  x,y,vx:rand(-150,150),vy:rand(-150,150),
+
+  life:rand(.3,.8),r:rand(2,6)
+
+ });
+
+}
+
+function gainXP(n){
+
+ state.xp+=n;
+
+ const need=100+(state.level-1)*70;
+
+ if(state.xp>=need){
+
+  state.xp-=need;state.level++;
+
+  document.getElementById("upgrade").style.display="flex";
+
+ }
+
+}
+
+function killZombie(z){
+
+ const i=zombies.indexOf(z);
+
+ if(i>=0)zombies.splice(i,1);
+
+ state.kills++;state.money+=z.type==="brute"?30:10;
+
+ gainXP(z.type==="brute"?45:20);
+
+ addBlood(z.x,z.y,22);
+
+}
+
+function update(dt){
+
+ if(!state.running)return;
+
+ spawnTimer-=dt;
+
+ const maxZ=7+Math.floor(state.wave*.7);
+
+ if(spawnTimer<=0 && zombies.length<maxZ){
+
+  spawnZombie();
+
+  spawnTimer=Math.max(.25,1.2-state.wave*.012);
+
+ }
+
+ let mx=joy.x,my=joy.y;
+
+ if(keys["ArrowLeft"]||keys["a"])mx=-1;
+
+ if(keys["ArrowRight"]||keys["d"])mx=1;
+
+ if(keys["ArrowUp"]||keys["w"])my=-1;
+
+ if(keys["ArrowDown"]||keys["s"])my=1;
+
+ const len=Math.hypot(mx,my)||1;
+
+ state.player.x+=mx/len*180*dt;
+
+ state.player.y+=my/len*180*dt;
+
+ state.player.x=Math.max(25,Math.min(W-25,state.player.x));
+
+ state.player.y=Math.max(80,Math.min(H-25,state.player.y));
+
+ if(fireHeld)shoot();
+
+ for(const z of zombies){
+
+  const a=Math.atan2(state.player.y-z.y,state.player.x-z.x);
+
+  z.x+=Math.cos(a)*z.speed*dt;
+
+  z.y+=Math.sin(a)*z.speed*dt;
+
+  z.hit-=dt;
+
+  if(dist(z,state.player)<z.r+20 && z.hit<=0){
+
+   z.hit=.65;state.hp-=z.type==="brute"?14:7;
+
+   document.getElementById("message").textContent="HASAR!";
+
+   setTimeout(()=>document.getElementById("message").textContent="",250);
+
+   if(state.hp<=0){state.hp=0;gameOver()}
+
+  }
+
+ }
+
+ for(let i=bullets.length-1;i>=0;i--){
+
+  const b=bullets[i];b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
+
+  let hit=false;
+
+  for(const z of zombies){
+
+   if(Math.hypot(b.x-z.x,b.y-z.y)<z.r){
+
+    z.hp-=b.damage;z.hit=.08;
+
+    addBlood(b.x,b.y,7);
+
+    hit=true;
+
+    if(z.hp<=0)killZombie(z);
+
+    break;
+
+   }
+
+  }
+
+  if(hit||b.life<=0||b.x<-50||b.x>W+50||b.y<-50||b.y>H+50)bullets.splice(i,1);
+
+ }
+
+ for(let i=particles.length-1;i>=0;i--){
+
+  const p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;
+
+  if(p.life<=0)particles.splice(i,1);
+
+ }
+
+ for(let i=blood.length-1;i>=0;i--){
+
+  const p=blood[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;p.life-=dt;
+
+  if(p.life<=0)blood.splice(i,1);
+
+ }
+
+ const target=10+state.wave*4;
+
+ if(state.kills>=target){
+
+  state.wave++;
+
+  state.kills=0;
+
+  state.hp=Math.min(100,state.hp+12);
+
+  state.ammo=state.maxAmmo;
+
+  document.getElementById("message").textContent="DALGA "+state.wave;
+
+  setTimeout(()=>document.getElementById("message").textContent="",1000);
+
+ }
+
+}
+
+function drawPlayer(){
+
+ const p=state.player;
+
+ ctx.save();
+
+ ctx.translate(p.x,p.y);
+
+ const z=nearest();
+
+ if(z){
+
+  ctx.rotate(Math.atan2(z.y-p.y,z.x-p.x));
+
+ }
+
+ // body
+
+ ctx.fillStyle="#d9d9d9";ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();
+
+ ctx.fillStyle="#202427";ctx.fillRect(-10,-22,20,12);
+
+ // gun
+
+ ctx.fillStyle="#17191a";ctx.fillRect(9,-5,35,10);
+
+ ctx.fillStyle="#444";ctx.fillRect(37,-3,18,6);
+
+ ctx.restore();
+
+}
+
+function drawZombie(z){
+
+ ctx.save();ctx.translate(z.x,z.y);
+
+ const a=Math.atan2(state.player.y-z.y,state.player.x-z.x);ctx.rotate(a);
+
+ // shadow
+
+ ctx.fillStyle="rgba(0,0,0,.35)";
+
+ ctx.beginPath();ctx.ellipse(0,z.r*.85,z.r*1.1,7,0,0,Math.PI*2);ctx.fill();
+
+ // legs
+
+ ctx.fillStyle="#202728";
+
+ ctx.fillRect(-14,8,10,25);ctx.fillRect(4,8,10,25);
+
+ // body
+
+ ctx.fillStyle=z.type==="brute"?"#39452d":"#344b2e";
+
+ ctx.beginPath();ctx.ellipse(0,0,z.r*.7,z.r*.82,0,0,Math.PI*2);ctx.fill();
+
+ // head
+
+ ctx.fillStyle="#66734a";
+
+ ctx.beginPath();ctx.arc(0,-z.r*.55,z.r*.52,0,Math.PI*2);ctx.fill();
+
+ // eyes
+
+ ctx.fillStyle="#e9f276";
+
+ ctx.beginPath();ctx.arc(-7,-z.r*.6,3.5,0,Math.PI*2);ctx.arc(7,-z.r*.6,3.5,0,Math.PI*2);ctx.fill();
+
+ // arms
+
+ ctx.strokeStyle="#566641";ctx.lineWidth=9;ctx.lineCap="round";
+
+ ctx.beginPath();ctx.moveTo(-12,-2);ctx.lineTo(-28,10);ctx.moveTo(12,-2);ctx.lineTo(28,10);ctx.stroke();
+
+ // health
+
+ ctx.rotate(-a);
+
+ ctx.fillStyle="#160d0d";ctx.fillRect(-z.r,-z.r-15,z.r*2,5);
+
+ ctx.fillStyle="#d83b3b";ctx.fillRect(-z.r,-z.r-15,z.r*2*(z.hp/z.max),5);
+
+ ctx.restore();
+
+}
+
+function draw(){
+
+ ctx.clearRect(0,0,W,H);
+
+ const g=ctx.createLinearGradient(0,0,0,H);
+
+ g.addColorStop(0,"#080c0e");g.addColorStop(1,"#11191b");
+
+ ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+
+ // grid
+
+ ctx.strokeStyle="rgba(100,115,120,.12)";ctx.lineWidth=1;
+
+ for(let x=0;x<W;x+=45){ctx.beginPath();ctx.moveTo(x,70);ctx.lineTo(x,H);ctx.stroke()}
+
+ for(let y=90;y<H;y+=45){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+
+ for(const p of blood){
+
+  ctx.globalAlpha=Math.max(0,p.life);
+
+  ctx.fillStyle="#b51e25";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+
+ }
+
+ ctx.globalAlpha=1;
+
+ for(const z of zombies)drawZombie(z);
+
+ for(const b of bullets){
+
+  ctx.strokeStyle="#ffd76a";ctx.lineWidth=3;
+
+  ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(b.x-b.vx*.025,b.y-b.vy*.025);ctx.stroke();
+
+ }
+
+ for(const p of particles){
+
+  ctx.globalAlpha=Math.max(0,p.life*4);
+
+  ctx.fillStyle=p.kind==="muzzle"?"#ffb23e":"#d82929";
+
+  ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+
+ }
+
+ ctx.globalAlpha=1;
+
+ drawPlayer();
+
+ document.getElementById("hp").textContent=Math.ceil(state.hp);
+
+ document.getElementById("level").textContent=state.level;
+
+ document.getElementById("money").textContent=state.money;
+
+ document.getElementById("ammo").textContent=state.reloading?"...":state.ammo;
+
+}
+
+function gameOver(){
+
+ state.running=false;
+
+ document.getElementById("message").textContent="OYUN BİTTİ — DALGA "+state.wave;
+
+ setTimeout(()=>{
+
+  document.getElementById("start").style.display="flex";
+
+  document.querySelector("#start h1").innerHTML='<span class="red">ZOMBIE</span> RUSH';
+
+  document.querySelector("#startBtn").textContent="TEKRAR OYNA";
+
+ },900);
+
+}
+
+function reset(){
+
+ state.running=true;state.hp=100;state.level=1;state.xp=0;state.money=0;
+
+ state.wave=1;state.ammo=12;state.damage=28;state.fireRate=280;state.kills=0;
+
+ zombies=[];bullets=[];particles=[];blood=[];
+
+ document.getElementById("start").style.display="none";
+
+}
+
+document.getElementById("startBtn").onclick=reset;
+
+document.getElementById("fire").onpointerdown=e=>{fireHeld=true;shoot()};
+
+document.getElementById("fire").onpointerup=()=>fireHeld=false;
+
+document.getElementById("fire").onpointercancel=()=>fireHeld=false;
+
+document.getElementById("reload").onclick=reload;
+
+document.getElementById("upDamage").onclick=()=>{
+
+ state.damage*=1.25;document.getElementById("upgrade").style.display="none";
+
+};
+
+document.getElementById("upFire").onclick=()=>{
+
+ state.fireRate=Math.max(90,state.fireRate*.8);document.getElementById("upgrade").style.display="none";
+
+};
+
+document.getElementById("upHealth").onclick=()=>{
+
+ state.hp=Math.min(150,state.hp+30);document.getElementById("upgrade").style.display="none";
+
+};
+
+addEventListener("keydown",e=>{
+
+ keys[e.key]=true;
+
+ if(e.key==="r")reload();
+
+});
+
+addEventListener("keyup",e=>keys[e.key]=false);
+
+// joystick
+
+let joyActive=false;
+
+document.getElementById("stick").addEventListener("pointerdown",e=>{
+
+ joyActive=true;e.currentTarget.setPointerCapture(e.pointerId);
+
+});
+
+document.getElementById("stick").addEventListener("pointermove",e=>{
+
+ if(!joyActive)return;
+
+ const r=e.currentTarget.getBoundingClientRect();
+
+ let x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2);
+
+ const m=Math.min(45,Math.hypot(x,y)),a=Math.atan2(y,x);
+
+ joy.x=Math.cos(a)*m/45;joy.y=Math.sin(a)*m/45;
+
+ document.getElementById("knob").style.transform=`translate(${joy.x*35}px,${joy.y*35}px)`;
+
+});
+
+document.getElementById("stick").addEventListener("pointerup",()=>{
+
+ joyActive=false;joy.x=joy.y=0;
+
+ document.getElementById("knob").style.transform="";
+
+});
+
+function loop(t){
+
+ const dt=Math.min(.033,(t-last)/1000);last=t;
+
+ update(dt);draw();requestAnimationFrame(loop);
+
+}
+
+requestAnimationFrame(loop);
+
 </script>
+
 </body>
+
 </html>
