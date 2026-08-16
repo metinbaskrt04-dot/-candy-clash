@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Candy Clash</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;background:linear-gradient(135deg,#24104f,#711c65);font-family:Arial;color:white;text-align:center}
+
+h1{font-size:42px;margin:25px 0 8px}
+
+#score{font-size:22px;margin-bottom:18px}
+
+#game{width:min(92vw,420px);margin:auto;display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+
+.candy{aspect-ratio:1;border-radius:18px;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;background:#ffffff22}
+
+.selected{outline:4px solid white;transform:scale(.92)}
+
+button{margin-top:22px;padding:13px 25px;border:0;border-radius:15px;font-size:18px;font-weight:bold}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🍭 Candy Clash</h1>
+
+<div id="score">Skor: 0</div>
+
+<div id="game"></div>
+
+<button onclick="newGame()">Yeni Oyun</button>
+
+<script>
+
+const emojis=["🍬","🍭","🍓","🍋","🍇","🍊"];
+
+let board=[],selected=null,score=0;
+
+function newGame(){
+
+ score=0;
+
+ board=Array.from({length:64},()=>emojis[Math.floor(Math.random()*emojis.length)]);
+
+ selected=null;
+
+ draw();
+
+}
+
+function draw(){
+
+ document.getElementById("score").textContent="Skor: "+score;
+
+ const game=document.getElementById("game");
+
+ game.innerHTML="";
+
+ board.forEach((c,i)=>{
+
+  const el=document.createElement("div");
+
+  el.className="candy"+(selected===i?" selected":"");
+
+  el.textContent=c;
+
+  el.onclick=()=>clickCandy(i);
+
+  game.appendChild(el);
+
+ });
+
+}
+
+function clickCandy(i){
+
+ if(selected===null){selected=i;draw();return}
+
+ if(i===selected){selected=null;draw();return}
+
+ const r1=Math.floor(selected/8),c1=selected%8;
+
+ const r2=Math.floor(i/8),c2=i%8;
+
+ if(Math.abs(r1-r2)+Math.abs(c1-c2)!==1){
+
+  selected=i;draw();return;
+
+ }
+
+ [board[selected],board[i]]=[board[i],board[selected]];
+
+ selected=null;
+
+ if(!removeMatches()){
+
+  [board[i],board[selected??i]]=[board[selected??i],board[i]];
+
+ }
+
+ draw();
+
+}
+
+function removeMatches(){
+
+ let remove=new Set();
+
+ for(let r=0;r<8;r++){
+
+  for(let c=0;c<6;c++){
+
+   let a=r*8+c,b=a+1,d=a+2;
+
+   if(board[a]===board[b]&&board[b]===board[d]){
+
+    remove.add(a);remove.add(b);remove.add(d);
+
+   }
+
+  }
+
+ }
+
+ for(let c=0;c<8;c++){
+
+  for(let r=0;r<6;r++){
+
+   let a=r*8+c,b=a+8,d=a+16;
+
+   if(board[a]===board[b]&&board[b]===board[d]){
+
+    remove.add(a);remove.add(b);remove.add(d);
+
+   }
+
+  }
+
+ }
+
+ if(!remove.size)return false;
+
+ score+=remove.size*10;
+
+ [...remove].forEach(i=>board[i]=null);
+
+ for(let c=0;c<8;c++){
+
+  let col=[];
+
+  for(let r=7;r>=0;r--)if(board[r*8+c])col.push(board[r*8+c]);
+
+  for(let r=7;r>=0;r--)board[r*8+c]=col[7-r]||emojis[Math.floor(Math.random()*emojis.length)];
+
+ }
+
+ setTimeout(()=>{
+
+  if(removeMatches())draw();
+
+ },250);
+
+ return true;
+
+}
+
+newGame();
+
+</script>
+
+</body>
+
+</html>
