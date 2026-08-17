@@ -347,14 +347,20 @@ build();
     },1800);
   }
 
-  // MOD SEÇ butonunu otomatik bul
-  document.querySelectorAll("button,div,a").forEach(el=>{
+  // // MOD SEÇ butonunu aç
+document.querySelectorAll("button,div,a").forEach(el=>{
     const text = (el.innerText || "").replace(/\s+/g," ").trim();
 
-    if(text === "MOD SEÇ" || text === "MOD\nSEÇ"){
-      el.addEventListener("click",openModes);
-      el.style.cursor = "pointer";
+    if(text === "MOD SEÇ"){
+        el.onclick = function(e){
+            e.preventDefault();
+            e.stopPropagation();w
+            openModes();
+        };
+
+        el.style.cursor = "pointer";
     }
+});
   });
 
   refreshSelection();
