@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Candy Clash - Oyun</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#0d1247;color:#fff}
+body{display:flex;justify-content:center}
+.app{width:min(100vw,520px);height:100%;position:relative;overflow:hidden;background:
+radial-gradient(circle at 50% 22%,#3b3190 0,#171b63 38%,#090d3b 100%)}
+.top{height:78px;background:linear-gradient(#1689dc,#0864bd);border-bottom:5px solid #19d9ff;
+display:flex;align-items:center;gap:9px;padding:8px 10px;box-shadow:0 5px 16px #0008}
+.avatar{width:58px;height:58px;border-radius:18px;background:linear-gradient(#ff4ac8,#ff7b24);
+border:4px solid #ffd52f;display:grid;place-items:center;font-size:32px;box-shadow:0 5px 0 #063d87}
+.stat{height:54px;border-radius:18px;background:linear-gradient(#1477cf,#0756a8);border:3px solid #07509a;
+box-shadow:0 5px 0 #043e82;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;white-space:nowrap;padding:0 12px}
+.stat.fire{width:72px}.stat.coins{flex:1}.stat.trophy{width:118px}
+.menu{width:56px;height:54px;border-radius:18px;border:3px solid #07509a;background:#126dc1;color:#fff;font-size:28px}
+.content{height:calc(100% - 78px);overflow:auto;padding:18px 14px 34px;scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+.back{display:inline-block;padding:12px 20px;border-radius:20px;background:linear-gradient(#7035d0,#5420a9);
+border:3px solid #ad71ff;box-shadow:0 5px 0 #28146e;color:white;font-size:18px;font-weight:800}
+.titleRow{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 12px}
+.level{font-size:34px;font-weight:900;text-shadow:0 3px 0 #0008}
+.target{background:linear-gradient(145deg,#6426bb,#47208d);border:4px solid #21dcff;border-radius:22px;padding:10px 14px;text-align:center;box-shadow:0 5px 0 #080c46}
+.target b{font-size:20px}.target small{display:block;font-size:14px;margin-top:3px}
+.info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:12px}
+.infoBox{background:#432092;border-radius:18px;padding:11px 5px;text-align:center;box-shadow:inset 0 1px #8d54ec;font-size:14px}
+.infoBox b{display:block;font-size:20px;margin-top:4px}
+.progress{height:12px;background:#080c3e;border:3px solid #1bdcff;border-radius:10px;margin:8px 2px 13px;overflow:hidden}
+.bar{height:100%;width:8%;background:linear-gradient(90deg,#36e77b,#ffe047);border-radius:8px;transition:.25s}
+.board{width:100%;aspect-ratio:1/1;background:linear-gradient(145deg,#161d69,#080e45);border:5px solid #22dcff;border-radius:28px;
+padding:10px;display:grid;grid-template-columns:repeat(8,1fr);gap:7px;box-shadow:0 10px 0 #05082e,0 0 25px #22dcff44}
+.candy{border:0;border-radius:38%;min-width:0;aspect-ratio:1;position:relative;box-shadow:inset 0 4px 5px #fff8,inset 0 -7px 8px #0005,0 4px 5px #0008;transition:transform .12s,filter .15s}
+.candy:after{content:"";position:absolute;width:30%;height:18%;left:17%;top:14%;border-radius:50%;background:#fff8;transform:rotate(-20deg)}
+.candy.selected{transform:scale(.86);filter:brightness(1.35);outline:4px solid #fff;outline-offset:2px}
+.red{background:linear-gradient(145deg,#ff536d,#d90e3b)}.yellow{background:linear-gradient(145deg,#ffe85b,#ffb900)}
+.green{background:linear-gradient(145deg,#54ed78,#14ae4d)}.blue{background:linear-gradient(145deg,#54b6ff,#087bdc)}
+.purple{background:linear-gradient(145deg,#bd63ff,#7c24d5)}.orange{background:linear-gradient(145deg,#ffb14d,#ed6413)}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.control{border:0;border-radius:19px;padding:14px 8px;color:#fff;font-size:17px;font-weight:900;box-shadow:0 5px 0 #271069}
+.shuffle{background:linear-gradient(#8535e8,#6320bd)}.moves{background:linear-gradient(#ffcb2f,#ef9f00);color:#432300}
+.message{text-align:center;min-height:30px;margin:10px 0;font-weight:800;color:#ffe449}
+.combo{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%) scale(.5);opacity:0;font-size:42px;font-weight:1000;color:#fff;text-shadow:0 5px 0 #7a168e,0 0 20px #ff48df;pointer-events:none;transition:.25s}
+.combo.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.particle{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;animation:pop .55s ease-out forwards}
+@keyframes pop{to{transform:translate(var(--x),var(--y)) scale(.1);opacity:0}}
+@media(max-width:390px){.top{gap:5px;padding:7px}.stat{font-size:15px;padding:0 8px}.stat.trophy{width:105px}.avatar{width:54px}.menu{width:52px}.board{gap:5px;padding:8px}.level{font-size:29px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="avatar">👑</div>
+  <div class="stat trophy">🏆 <span id="trophy">0</span></div>
+  <div class="stat fire">🔥 <span id="streak">7</span></div>
+  <div class="stat coins">🪙 <span id="coins">13.080</span></div>
+  <button class="menu">☰</button>
+</header>
+
+<main class="content">
+  <button class="back" onclick="location.href='index.html'">← Ana Menü</button>
+
+  <div class="titleRow">
+    <div class="level">BÖLÜM <span id="level">45</span></div>
+    <div class="target">🎯 <b>HEDEF <span id="goal">1500</span></b><small>puan</small></div>
+  </div>
+
+  <div class="info">
+    <div class="infoBox">HAMLE<b id="moves">28</b></div>
+    <div class="infoBox">PUAN<b id="score">0</b></div>
+    <div class="infoBox">🏆<b id="stars">0</b></div>
+  </div>
+
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="board" id="board"></div>
+  <div class="message" id="message">Aynı renkten 3 veya daha fazlasını eşleştir!</div>
+
+  <div class="controls">
+    <button class="control shuffle" onclick="shuffle()">🔀 KARIŞTIR</button>
+    <button class="control moves" onclick="addMoves()">⚡ +3 HAMLE</button>
+  </div>
+</main>
+<div class="combo" id="combo">COMBO!</div>
+</div>
+
+<script>
+const colors=["red","yellow","green","blue","purple","orange"];
+const board=document.getElementById("board");
+let cells=[], selected=null, score=0, moves=28, goal=1500;
+
+function rand(){return colors[Math.floor(Math.random()*colors.length)]}
+function build(){
+  board.innerHTML=""; cells=[];
+  for(let i=0;i<64;i++){
+    let b=document.createElement("button"); b.className="candy "+rand(); b.dataset.i=i;
+    b.onclick=()=>tap(i); board.appendChild(b); cells.push(b);
+  }
+}
+function tap(i){
+  if(moves<=0)return;
+  if(selected===null){selected=i;cells[i].classList.add("selected");return}
+  if(selected===i){cells[i].classList.remove("selected");selected=null;return}
+  const a=selected,b=i;
+  cells[a].classList.remove("selected"); selected=null;
+  if(!adj(a,b)) {cells[b].classList.add("selected");selected=b;return}
+  [cells[a].className,cells[b].className]=[cells[b].className,cells[a].className];
+  moves--; document.getElementById("moves").textContent=moves;
+  setTimeout(checkMatches,100);
+}
+function adj(a,b){return Math.abs(a-b)===1 || Math.abs(a-b)===8}
+function findMatches(){
+  const set=new Set();
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    let i=r*8+c, col=cells[i].className.split(" ")[1];
+    if(c<6 && col===cells[i+1].className.split(" ")[1] && col===cells[i+2].className.split(" ")[1]){
+      let j=c; while(j<8&&cells[r*8+j].className.split(" ")[1]===col){set.add(r*8+j);j++}
+    }
+    if(r<6 && col===cells[i+8].className.split(" ")[1] && col===cells[i+16].className.split(" ")[1]){
+      let j=r; while(j<8&&cells[j*8+c].className.split(" ")[1]===col){set.add(j*8+c);j++}
+    }
+  }
+  return [...set];
+}
+function checkMatches(){
+  let m=findMatches();
+  if(!m.length){if(moves===0)end(false);return}
+  let gain=m.length*50 + (m.length>=4?250:0);
+  score+=gain;
+  document.getElementById("score").textContent=score;
+  document.getElementById("bar").style.width=Math.min(100,score/goal*100)+"%";
+  if(m.length>=4)showCombo(m.length>=5?"MEGA COMBO!":"COMBO!");
+  m.forEach(i=>{burst(cells[i]);cells[i].className="candy "+rand()});
+  setTimeout(()=>{if(score>=goal)end(true)},220);
+}
+function showCombo(t){
+ const e=document.getElementById("combo");e.textContent=t;e.classList.add("show");
+ setTimeout(()=>e.classList.remove("show"),650);
+}
+function burst(el){
+ const r=el.getBoundingClientRect();
+ for(let k=0;k<7;k++){
+   let p=document.createElement("i");p.className="particle";
+   p.style.left=(r.left+r.width/2)+"px";p.style.top=(r.top+r.height/2)+"px";
+   p.style.background=el.className.includes("red")?"#ff375f":"#fff";
+   p.style.setProperty("--x",(Math.random()*110-55)+"px");p.style.setProperty("--y",(Math.random()*110-55)+"px");
+   document.body.appendChild(p);setTimeout(()=>p.remove(),600);
+ }
+}
+function shuffle(){cells.forEach(c=>c.className="candy "+rand());document.getElementById("message").textContent="Tahta karıştırıldı!";}
+function addMoves(){moves+=3;document.getElementById("moves").textContent=moves;document.getElementById("message").textContent="+3 hamle kazandın!";}
+function end(win){
+ document.getElementById("message").textContent=win?"🎉 BÖLÜM TAMAMLANDI!":"😵 Hamleler bitti!";
+ if(win){document.getElementById("stars").textContent="3";document.getElementById("trophy").textContent="1";}
+}
+build();
+</script>
+</body>
+</html>
