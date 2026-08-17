@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Candy Clash</title>
+<style>
+:root{--blue:#087bd8;--deep:#17115b;--purple:#6b1fb2;--pink:#ff2d86;--yellow:#ffd522}
+*{box-sizing:border-box}body{margin:0;background:#08071d;font-family:Arial,sans-serif;color:white;overflow-x:hidden}
+button{font:inherit;border:0;color:white;font-weight:900;cursor:pointer}.app{max-width:520px;margin:auto;min-height:100vh;background:radial-gradient(circle at 50% 30%,#9cf5ff 0,#48d7e7 35%,#35b9dc 58%,#39b75d 68%,#3b197f 85%);position:relative;overflow:hidden}
+.sky{position:absolute;inset:0;background:radial-gradient(circle at 70% 15%,#fff7 0 3%,transparent 4%),radial-gradient(circle at 10% 35%,#fff8 0 6%,transparent 7%);pointer-events:none}
+.top{position:relative;z-index:3;background:linear-gradient(#1294ed,#0862bd);padding:10px 10px 12px;display:flex;gap:7px;align-items:center;border-bottom:5px solid #22d8ff}.avatar{width:58px;height:58px;border:4px solid #ffd72b;border-radius:17px;background:linear-gradient(135deg,#ff5bb5,#7927c8);display:grid;place-items:center;font-size:34px;box-shadow:0 4px #37126f}.stat{height:48px;background:#0754a8;border:3px solid #063f83;border-radius:15px;padding:0 10px;display:flex;align-items:center;gap:6px;font-size:17px;box-shadow:0 4px #053266}.menu{margin-left:auto;width:48px;height:48px;border-radius:15px;background:#0754a8;border:3px solid #063f83;font-size:25px}.hero{position:relative;min-height:520px;padding:25px 16px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;z-index:1}.castle{font-size:95px;filter:drop-shadow(0 10px 5px #0004);margin-top:15px}.title{font-size:31px;line-height:.95;margin:4px 0 15px;text-shadow:3px 4px #7b158d}.heroChar{font-size:175px;filter:drop-shadow(0 14px 8px #0007);margin-top:-10px}.side{position:absolute;top:80px;display:flex;flex-direction:column;gap:10px}.left{left:9px}.right{right:9px}.tile{width:104px;min-height:68px;border-radius:18px;background:linear-gradient(#6530b8,#3f1a8e);border:4px solid #25d9ff;box-shadow:0 6px #160b52;padding:8px 4px;font-size:12px}.tile b{display:block;font-size:18px;line-height:1.05}.mainBtns{display:flex;gap:12px;align-items:end;margin-top:-10px}.play{width:220px;height:70px;border-radius:25px;background:linear-gradient(#ffe83c,#ffb900);border:4px solid #fff3a0;box-shadow:0 8px #9b5a00;color:white;font-size:28px;text-shadow:2px 3px #9c6100}.small{width:96px;height:68px;border-radius:22px;background:linear-gradient(#c22dff,#7b0cc7);border:3px solid #e36bff;box-shadow:0 7px #4d087e;font-size:14px}.vs{background:linear-gradient(#35baff,#0871df);border-color:#8ee9ff}.panel{position:relative;z-index:2;margin:12px 14px;background:linear-gradient(110deg,#b3218e,#5820a4);border:4px solid #2ad8ff;border-radius:22px;padding:14px;box-shadow:0 7px #230b63}.panel h2{margin:0 0 6px;font-size:18px}.panel p{margin:4px 0;color:#ffe92c;font-weight:bold;font-size:13px}.panel button{float:right;margin-top:-45px;background:#ffd52b;color:#5d3600;border-radius:16px;padding:12px 24px}.nav{position:sticky;bottom:0;z-index:8;background:#087bc9;border-top:3px solid #4be3ff;display:grid;grid-template-columns:repeat(5,1fr)}.nav button{background:#096fc0;padding:10px 2px;font-size:12px}.nav button.active{background:#ef2ca8}.screen{display:none;position:relative;z-index:4;min-height:calc(100vh - 80px);background:linear-gradient(#26116d,#0b174e);padding:12px}.screen.active{display:block}.back{background:#6924bd;border:2px solid #a77aff;border-radius:14px;padding:9px 14px}.gameHead{display:flex;justify-content:space-between;align-items:center;margin:10px 0}.goal{background:#461a91;border:3px solid #36dfff;border-radius:16px;padding:10px;text-align:center}.board{width:min(94vw,480px);aspect-ratio:1;margin:auto;padding:6px;background:#17245d;border:4px solid #4bdcff;border-radius:18px;display:grid;grid-template-columns:repeat(8,1fr);gap:5px;box-shadow:0 8px #080c31}.candy{border-radius:12px;position:relative;box-shadow:inset 0 3px #fff8,0 3px 2px #0006;transition:.12s;min-width:0}.candy:active{transform:scale(.88)}.red{background:#f3324e}.yellow{background:#ffd52a;border-radius:50% 50% 45% 45%}.green{background:#42d65d;border-radius:30%}.blue{background:#2f9dff;border-radius:50%}.purple{background:#b34cff;border-radius:45%}.orange{background:#ff8b22;border-radius:50%}.strip{background:repeating-linear-gradient(0deg,#fff 0 5px,#ef3446 5px 15px)}.selected{outline:4px solid white;transform:scale(1.08);z-index:2}.hud{display:flex;justify-content:space-around;margin:10px}.hud span{background:#461a91;border-radius:12px;padding:8px 12px}.result{text-align:center;padding:30px}.result h1{font-size:40px;color:#ffe02e}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="sky"></div>
+<header class="top"><div class="avatar">👧</div><div class="stat">🏆 <span id="trophies">52,450</span></div><div class="stat">🔥 7</div><div class="stat">🪙 <span id="coins">12,580</span></div><button class="menu">☰</button></header>
+
+<section id="home" class="hero">
+<div class="title">CANDY<br>CLASH</div>
+<div class="castle">🏰</div><div class="heroChar">👸</div>
+<div class="side left"><button class="tile" onclick="shop()">🏪<b>MAĞAZA</b></button><button class="tile">🎁<b>ETKİNLİKLER</b></button><button class="tile">📋<b>GÖREVLER</b></button><button class="tile">🏆<b>SIRALAMA</b></button></div>
+<div class="side right"><button class="tile">❤️<b>CAN DOLU</b></button><button class="tile">🐷<b>KUMBARA</b></button><button class="tile">🎡<b>ŞANS ÇARKI</b></button><button class="tile">🎁<b>GÜNLÜK SANDIK</b></button></div>
+<div class="mainBtns"><button class="small" onclick="alert('Mod seçimi yakında!')">MOD<br>SEÇ</button><button class="play" onclick="startGame()">OYNA</button><button class="small vs" onclick="startGame(true)">VS<br>1v1</button></div>
+</section>
+
+<section class="panel"><h2>⚔️ VS ŞAMPİYONASI</h2><p>En iyi oyuncu sen ol!</p><span>🎴 Özel kart &nbsp; 🪙 2,500 &nbsp; 🏆 500</span><button onclick="startGame(true)">OYNA</button><div style="clear:both"></div></section>
+<section class="panel"><h2>🎁 GÜNLÜK ÖDÜL</h2><p>Her gün giriş yap, ödülleri kap!</p><span>🪙 500 &nbsp; 💎 10</span><button onclick="claim()">AL</button><div style="clear:both"></div></section>
+
+<section id="game" class="screen">
+<button class="back" onclick="goHome()">← Ana Menü</button>
+<div class="gameHead"><h2 id="modeTitle">BÖLÜM 45</h2><div class="goal">HEDEF 🎯 24<br><small>24 mavi + kırmızı</small></div></div>
+<div class="hud"><span>HAMLE <b id="moves">28</b></span><span>PUAN <b id="score">0</b></span><span>🏆 <b id="enemy">0</b></span></div>
+<div id="board" class="board"></div>
+<div class="panel"><h2>⚡ GÜÇLENDİRİCİLER</h2><span>🔨 &nbsp; 🔄 &nbsp; 🌈</span></div>
+</section>
+<section id="result" class="screen"><div class="result"><h1>🎉 HARİKA!</h1><p id="resultText">Bölümü tamamladın!</p><p>🪙 +500 &nbsp; 🏆 +50</p><button class="play" onclick="startGame()">TEKRAR OYNA</button><br><br><button class="back" onclick="goHome()">ANA MENÜ</button></div></section>
+<nav class="nav"><button class="active" onclick="goHome()">🏠<br>ANA SAYFA</button><button>👧<br>KARAKTER</button><button>🛡️<br>TAKIM</button><button>👥<br>ARKADAŞLAR</button><button>⚙️<br>AYARLAR</button></nav>
+</div>
+<script>
+const colors=['red','yellow','green','blue','purple','orange'];let board=[],selected=null,moves=28,score=0,vs=false;
+const B=document.getElementById('board');
+function startGame(isVs=false){vs=isVs;document.getElementById('home').style.display='none';document.querySelectorAll('.panel').forEach(x=>x.style.display='none');document.getElementById('game').classList.add('active');document.getElementById('result').classList.remove('active');document.getElementById('modeTitle').textContent=isVs?'VS ŞAMPİYONASI':'BÖLÜM 45';moves=28;score=0;makeBoard();render();}
+function makeBoard(){board=Array.from({length:64},(_,i)=>{let c;do{c=colors[Math.floor(Math.random()*colors.length)]}while((i%8>=2&&board[i-1]==c&&board[i-2]==c)||(i>=16&&board[i-8]==c&&board[i-16]==c));return c})}
+function render(){B.innerHTML='';board.forEach((c,i)=>{let d=document.createElement('button');d.className='candy '+c;d.dataset.i=i;d.onclick=()=>pick(i);B.appendChild(d)});document.getElementById('moves').textContent=moves;document.getElementById('score').textContent=score}
+function pick(i){if(selected===null){selected=i;B.children[i].classList.add('selected');return}let a=selected,b=i;B.children[a].classList.remove('selected');selected=null;if(!adj(a,b))return;[board[a],board[b]]=[board[b],board[a]];let matches=findMatches();if(!matches.length){[board[a],board[b]]=[board[b],board[a]];return}moves--;resolve();render();if(moves<=0)endGame()}
+function adj(a,b){return Math.abs(a-b)===1&&Math.floor(a/8)===Math.floor(b/8)||Math.abs(a-b)===8}
+function findMatches(){let set=new Set();for(let r=0;r<8;r++){let run=1;for(let c=1;c<=8;c++){if(c<8&&board[r*8+c]===board[r*8+c-1])run++;else{if(run>=3)for(let k=0;k<run;k++)set.add(r*8+c-1-k);run=1}}}for(let c=0;c<8;c++){let run=1;for(let r=1;r<=8;r++){if(r<8&&board[r*8+c]===board[(r-1)*8+c])run++;else{if(run>=3)for(let k=0;k<run;k++)set.add((r-1-k)*8+c);run=1}}}return [...set]}
+function resolve(){let m=findMatches();if(!m.length)return;score+=m.length*50;if(vs)document.getElementById('enemy').textContent=Math.max(0,score-100);m.forEach(i=>board[i]=null);for(let c=0;c<8;c++){let vals=[];for(let r=7;r>=0;r--)if(board[r*8+c])vals.push(board[r*8+c]);for(let r=7;r>=0;r--)board[r*8+c]=vals[7-r]||colors[Math.floor(Math.random()*colors.length)]}setTimeout(()=>{if(findMatches().length){resolve();render()}},100)}
+function endGame(){document.getElementById('game').classList.remove('active');document.getElementById('result').classList.add('active');document.getElementById('resultText').textContent=vs?'Rakibi yendin! Puanın: '+score:'Bölümü tamamladın! Puanın: '+score}
+function goHome(){document.getElementById('game').classList.remove('active');document.getElementById('result').classList.remove('active');document.getElementById('home').style.display='flex';document.querySelectorAll('.panel').forEach(x=>x.style.display='block')}
+function claim(){let c=Number(localStorage.coins||12580)+500;localStorage.coins=c;document.getElementById('coins').textContent=c.toLocaleString('tr-TR');alert('🎁 500 altın hesabına eklendi!')}
+function shop(){alert('🍭 Mağaza açılıyor — güçlendiriciler ve özel şekerler yakında!')}
+document.getElementById('coins').textContent=Number(localStorage.coins||12580).toLocaleString('tr-TR');
+</script>
+</body></html>
