@@ -345,23 +345,19 @@ build();
     window.modeMessageTimer = setTimeout(()=>{
       msg.style.display = "none";
     },1800);
-  }
 
-  // // MOD SEÇ butonunu aç
+    
+  }// MOD SEÇ butonunu aç
 document.querySelectorAll("button,div,a").forEach(el=>{
-    const text = (el.innerText || "").replace(/\s+/g," ").trim();
+  const text=(el.innerText||"").replace(/\s+/g," ").trim();
 
-    if(text === "MOD SEÇ"){
-        el.onclick = function(e){
-            e.preventDefault();
-            e.stopPropagation();w
-            openModes();
-        };
-
-        el.style.cursor = "pointer";
-    }
+  if(text==="MOD SEÇ"){
+    el.onclick=openModes;
+    el.style.cursor="pointer";
+  }
 });
-  });
+
+
 
   refreshSelection();
 
